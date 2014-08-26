@@ -39,10 +39,6 @@ Yes, First, GZIP compression should be enabled in your web-server (apache?), and
 
 Pretty much, yeah.
 
-== Screenshots ==
-
-None.
-
 == Changelog ==
 = 1.0 =
 
