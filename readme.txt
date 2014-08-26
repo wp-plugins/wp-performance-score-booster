@@ -1,13 +1,13 @@
 === WP Performance Score Booster ===
 Contributors: dipakcg
-Tags: remove, query, strings, static, resources, gzip, compression, expire, caching, boost, pingdom, gtmetrix, yslow, pagespeed
+Tags: remove, query, strings, static, resources, gzip, compression, expire, caching, booster, speed, performance, pingdom, gtmetrix, yslow, pagespeed, cache
 Requires at least: 3.5
 Tested up to: 3.9.2
 Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Helps you to improve your website scores in services like PageSpeed, YSlow, Pingdoom and GTmetrix.
+Helps you to improve your website performance scores in services like PageSpeed, YSlow, Pingdoom and GTmetrix.
 
 == Description ==
 
@@ -41,7 +41,7 @@ Pretty much, yeah.
 
 == Screenshots ==
 
-Not required.
+None.
 
 == Changelog ==
 = 1.0 =
