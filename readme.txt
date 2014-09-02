@@ -14,9 +14,9 @@ Helps you to improve your website scores in services like PageSpeed, YSlow, Ping
 This plugin helps you to improve your website scores in services like PageSpeed, YSlow, Pingdom and GTmetrix. It will remove any query strings from static resources like CSS & JS files,  enable GZIP compression (compress text, html, javascript, css, xml and so on) and set expires caching (leverage browser caching) to improve your site performance scores.
 
 == Installation ==
-1. Upload the `wp-performance-score-booster` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the \'Plugins\' menu in WordPress.
-3. That\'s it!
+1. Upload the ‘wp-performance-score-booster’ folder to the ‘/wp-content/plugins/‘ directory
+2. Activate the plugin through the ‘Plugins’ menu in WordPress.
+3. That’s it!
 
 == Frequently Asked Questions ==
 = What does this plugin do? =
