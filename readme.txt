@@ -1,6 +1,6 @@
 === WP Performance Score Booster ===
 Contributors: dipakcg
-Tags: performance, load, speed, time, remove, query, strings, static, resources, gzip, compression, expire, caching, boost, pingdom, gtmetrix, yslow, pagespeed
+Tags: performance, speed, time, query, strings, gzip, compression, caching, boost, pingdom, gtmetrix, yslow, pagespeed
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3S8BRPLWLNQ38
 Requires at least: 3.5
 Tested up to: 4.0
