@@ -141,7 +141,7 @@ EOD;
 add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 ); */
 
 // Enqueue scripts in the footer to speed-up page load
-function footer_enqueue_scripts() {
+/* function footer_enqueue_scripts() {
 	remove_action('wp_head', 'wp_print_scripts');
 	// remove_action('wp_head', 'wp_print_head_scripts', 9);
 	remove_action('wp_head', 'wp_enqueue_scripts', 1);
@@ -149,7 +149,7 @@ function footer_enqueue_scripts() {
 	// add_action('wp_footer', 'wp_print_head_scripts', 5);
     add_action('wp_footer', 'wp_enqueue_scripts', 5);
 }
-add_action('after_setup_theme', 'footer_enqueue_scripts');
+add_action('after_setup_theme', 'footer_enqueue_scripts'); */
 
 function wppsb_admin_options() {
 	?>
