@@ -15,7 +15,7 @@ if (!defined('WPPSB_PLUGIN_VERSION')) {
 if (!defined('WPPSB_PLUGIN_VERSION_NUM')) {
     define('WPPSB_PLUGIN_VERSION_NUM', '1.2.1');
 }
-add_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
+update_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
 
 // Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
 add_action( 'admin_init', 'wppsb_add_stylesheet' );
