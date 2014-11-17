@@ -130,27 +130,6 @@ EOD;
     return $vary_accept_encoding_header . $rules;
 }
 
-// Defer parsing of java-script (to load at last)
-/* function defer_parsing_of_js ( $src ) {
-	if ( FALSE === strpos( $src, '.js' ) )
-		return $src;
-	if ( strpos( $src, 'jquery.js' ) )
-		return $src;
-	return "$src' defer='defer";
-}
-add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 ); */
-
-// Enqueue scripts in the footer to speed-up page load
-/* function footer_enqueue_scripts() {
-	remove_action('wp_head', 'wp_print_scripts');
-	// remove_action('wp_head', 'wp_print_head_scripts', 9);
-	remove_action('wp_head', 'wp_enqueue_scripts', 1);
-	add_action('wp_footer', 'wp_print_scripts', 5);
-	// add_action('wp_footer', 'wp_print_head_scripts', 5);
-    add_action('wp_footer', 'wp_enqueue_scripts', 5);
-}
-add_action('after_setup_theme', 'footer_enqueue_scripts'); */
-
 function wppsb_admin_options() {
 	?>
 	<div class="wrap">
@@ -286,13 +265,11 @@ function wppsb_deactivate_plugin() {
 	remove_filter( 'script_loader_src', 'wppsb_remove_query_strings_emp');
 	remove_filter( 'style_loader_src', 'wppsb_remove_query_strings_emp');
 	remove_filter( 'mod_rewrite_rules', 'wppsb_enable_gzip_filter');
-	remove_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
+	remove_filter( 'mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
 	remove_filter( 'mod_rewrite_rules', 'wppsb_expire_caching_filter');
 
-	// Delete default options value in the database
-	/* delete_option( 'wppsb_remove_query_strings' );
-	delete_option( 'wppsb_enable_gzip' );
-	delete_option( 'wppsb_expire_caching' ); */
+	// Delete plugin version options value in the database
+	delete_option( 'wppsb_plugin_version' );
 
     flush_rewrite_rules();
 }
