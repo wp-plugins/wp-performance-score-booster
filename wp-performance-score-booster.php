@@ -19,7 +19,6 @@ if (!defined('WPPSB_PLUGIN_VERSION_NUM')) {
 update_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
 
 // Load plugin textdomain for language trnaslation
-// load_plugin_textdomain( 'wp-performance-score-booster', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 function wppsb_load_plugin_textdomain() {
 
 	$domain = 'wp-performance-score-booster';
@@ -50,125 +49,6 @@ function wppsb_remove_query_strings_emp( $src ) {
 	$str_parts = explode( '&ver', $src );
 	return $str_parts[0];
 }
-
-/* function wppsb_enable_gzip_compression ( $host ) {
-	// Get htaccess file path
-	$htaccess_file = ABSPATH.'.htaccess';
-
-	// $host_rule = '# BEGIN : Enable GZIP Compression by WP Performance Score Booster' . PHP_EOL;
-	$host_rule = '<IfModule mod_deflate.c>' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE text/plain' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE text/html' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE text/xml' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE text/css' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/xml' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/xhtml+xml' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/rss+xml' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/javascript' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/x-javascript' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/x-httpd-php' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE application/x-httpd-fastphp' . PHP_EOL;
-	$host_rule .= 'AddOutputFilterByType DEFLATE image/svg+xml' . PHP_EOL;
-	$host_rule .= 'SetOutputFilter DEFLATE' . PHP_EOL;
-	$host_rule .= '</IfModule>' . PHP_EOL;
-	$host_rule .= '# END : Enable GZIP Compression by WP Performance Score Booster'. PHP_EOL . PHP_EOL;
-
-	// Get the file permission to make sure we can write to the file
-	$perms = substr( sprintf( '%o', @fileperms( $htaccess_file ) ), - 4 );
-
-	@chmod( $htaccess_file, 0664 );
-
-	// Get the contents of the htaccess
-	$htaccess_contents = @file_get_contents( $htaccess_file );
-
-	// We couldn't get the file contents
-	if ( $htaccess_contents === false ) {
-		return false;
-	}
-
-	$htaccess_contents = preg_replace( "/(\\r\\n|\\n|\\r)/", PHP_EOL, $htaccess_contents );
-
-	$htaccess_contents = $host_rule . $htaccess_contents;
-
-	if ( strpos( $htaccess_contents, '# BEGIN : Enable GZIP Compression by WP Performance Score Booster' ) !== false ) {
-		$htaccess_contents = str_replace( $host_rule, $host_rule, $htaccess_contents );
-	} else {
-		$htaccess_contents = '# BEGIN : Enable GZIP Compression by WP Performance Score Booster' . PHP_EOL . $host_rule . $htaccess_contents;
-	}
-
-	@file_put_contents( $htaccess_file, $htaccess_contents, LOCK_EX );
-
-	return true;
-} */
-
-/* function wppsb_disable_gzip_compression ( $src ) {
-		$rule_open  = array( '# BEGIN : Enable GZIP Compression by WP Performance Score Booster', '# BEGIN : Enable GZIP Compression by WP Performance Score Booster' );
-		$rule_close = array( '# END : Enable GZIP Compression by WP Performance Score Booster', '# END : Enable GZIP Compression by WP Performance Score Booster' );
-
-		// Get htaccess file path
-		$htaccess_file = ABSPATH.'.htaccess';
-
-		// Get the contents of the htaccess or nginx file
-		$perms = substr( sprintf( '%o', @fileperms( $htaccess_file ) ), - 4 );
-
-		if ( $perms == '0444' ) {
-			@chmod( $htaccess_file, 0664 );
-		}
-
-		// Make sure the file exists and create it if it doesn't
-		if ( ! file_exists( $htaccess_file ) ) {
-			@touch( $htaccess_file );
-		}
-
-		// Get the contents of the htaccess
-		$htaccess_contents = @file_get_contents( $htaccess_file );
-
-		// We couldn't get the file contents
-		if ( $htaccess_contents === false ) {
-			return false;
-		}
-		else {
-			// Create an array to make this easier
-			$lines = explode( PHP_EOL, $htaccess_contents );
-			$state = false;
-
-			// For each line in the file
-			foreach ( $lines as $line_number => $line ) {
-
-				// If we're at the beginning of the section
-				if ( in_array( trim( $line ), $rule_open ) !== false ) {
-					$state = true;
-				}
-
-				// As long as we're not in the section keep writing
-				if ( $state == true ) {
-					unset( $lines[$line_number] );
-				}
-
-				// See if we're at the end of the section
-				if ( in_array( trim( $line ), $rule_close ) !== false ) {
-					$state = false;
-				}
-			}
-
-			$htaccess_contents = trim( implode( PHP_EOL, $lines ) );
-
-			if ( strlen( $htaccess_contents ) < 1 ) {
-				$htaccess_contents = PHP_EOL;
-			}
-
-			if ( ! @file_put_contents( $htaccess_file, $htaccess_contents, LOCK_EX ) ) {
-				return false;
-			}
-		}
-
-		//reset file permissions if we changed them
-		if ( $perms == '0444' ) {
-			@chmod( $htaccess_file, 0444 );
-		}
-
-		return true;
-} */
 
 // Enable GZIP Compression
 function wppsb_enable_gzip_filter( $rules ) {
@@ -233,27 +113,6 @@ EOD;
     return $vary_accept_encoding_header . $rules;
 }
 
-// Defer parsing of java-script (to load at last)
-/* function defer_parsing_of_js ( $src ) {
-	if ( FALSE === strpos( $src, '.js' ) )
-		return $src;
-	if ( strpos( $src, 'jquery.js' ) )
-		return $src;
-	return "$src' defer='defer";
-}
-add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 ); */
-
-// Enqueue scripts in the footer to speed-up page load
-/* function footer_enqueue_scripts() {
-	remove_action('wp_head', 'wp_print_scripts');
-	// remove_action('wp_head', 'wp_print_head_scripts', 9);
-	remove_action('wp_head', 'wp_enqueue_scripts', 1);
-	add_action('wp_footer', 'wp_print_scripts', 5);
-	// add_action('wp_footer', 'wp_print_head_scripts', 5);
-    add_action('wp_footer', 'wp_enqueue_scripts', 5);
-}
-add_action('after_setup_theme', 'footer_enqueue_scripts'); */
-
 // If 'Remove query strings" checkbox ticked, add filter otherwise remove filter
 if (get_option('wppsb_remove_query_strings') == 'on') {
 	add_filter( 'script_loader_src', 'wppsb_remove_query_strings_q', 15, 1 );
@@ -309,12 +168,10 @@ function wppsb_admin_options() {
 		if ($enable_gzip_val == 'on') {
 			add_filter('mod_rewrite_rules', 'wppsb_enable_gzip_filter');
 			add_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
-			/* add_filter( 'init', 'wppsb_enable_gzip_compression' ); */
 		}
 		else {
 			remove_filter('mod_rewrite_rules', 'wppsb_enable_gzip_filter');
 			remove_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
-			/* add_filter( 'init', 'wppsb_disable_gzip_compression' ); */
 		}
 
 		// If 'Expire caching" checkbox ticked, add filter otherwise remove filter
@@ -375,7 +232,6 @@ function wppsb_admin_options() {
 add_action( 'admin_menu', 'wppsb_add_admin_menu' );
 function wppsb_add_admin_menu() {
 	add_menu_page( __('WP Performance Score Booster Settings', 'wp-performance-score-booster'), __('WP Performance Score Booster', 'wp-performance-score-booster'), 'manage_options', 'wp-performance-score-booster', 'wppsb_admin_options', plugins_url('assets/images/wppsb-icon-24x24.png', __FILE__) );
-	// add_options_page( __('WP Performance Score Booster Settings', 'wp-performance-score-booster'), __('WP Performance Score Booster', 'wp-performance-score-booster'), 'manage_options', 'wp-performance-score-booster', 'wppsb_admin_options' );
 }
 
 // Add header
