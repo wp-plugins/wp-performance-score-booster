@@ -3,7 +3,7 @@
 Plugin Name: WP Performance Score Booster
 Plugin URI: https://github.com/dipakcg/wp-performance-score-booster
 Description: Speed-up page load times and improve website scores in services like PageSpeed, YSlow, Pingdom and GTmetrix.
-Version: 1.2.2
+Version: 1.3
 Author: Dipak C. Gajjar
 Author URI: http://dipakgajjar.com
 Text Domain: wp-performance-score-booster
@@ -14,11 +14,12 @@ if (!defined('WPPSB_PLUGIN_VERSION')) {
     define('WPPSB_PLUGIN_VERSION', 'wppsb_plugin_version');
 }
 if (!defined('WPPSB_PLUGIN_VERSION_NUM')) {
-    define('WPPSB_PLUGIN_VERSION_NUM', '1.2.2');
+    define('WPPSB_PLUGIN_VERSION_NUM', '1.3');
 }
 update_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
 
 // Load plugin textdomain for language trnaslation
+// load_plugin_textdomain( 'wp-performance-score-booster', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 function wppsb_load_plugin_textdomain() {
 
 	$domain = 'wp-performance-score-booster';
@@ -51,10 +52,9 @@ function wppsb_remove_query_strings_emp( $src ) {
 }
 
 // Enable GZIP Compression
-function wppsb_enable_gzip_filter( $rules ) {
+function wppsb_enable_gzip_filter( $rules = '' ) {
 $gzip_htaccess_content = <<<EOD
-\n## Added by WP Performance Score Booster ##
-## BEGIN : Enable GZIP Compression (compress text, html, javascript, css, xml and so on) ##
+\n## BEGIN Enable GZIP Compression ##
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html
@@ -70,16 +70,15 @@ AddOutputFilterByType DEFLATE application/x-httpd-fastphp
 AddOutputFilterByType DEFLATE image/svg+xml
 SetOutputFilter DEFLATE
 </IfModule>
-## END : Enable GZIP Compression ##\n\n
+## END Enable GZIP Compression ##
 EOD;
     return $gzip_htaccess_content . $rules;
 }
 
 // Enable expire caching
-function wppsb_expire_caching_filter( $rules ) {
+function wppsb_expire_caching_filter( $rules = '' ) {
 $expire_cache_htaccess_content = <<<EOD
-\n## Added by WP Performance Score Booster ##
-## BEGIN : Expires Caching (Leverage Browser Caching) ##
+\n## BEGIN Expires Caching (Leverage Browser Caching) ##
 <IfModule mod_expires.c>
 ExpiresActive On
 ExpiresByType image/jpg "access 2 week"
@@ -93,25 +92,46 @@ ExpiresByType application/x-shockwave-flash "access 2 week"
 ExpiresByType image/x-icon "access 2 week"
 ExpiresDefault "access 2 week"
 </IfModule>
-## END : Expires Caching (Leverage Browser Caching) ##\n\n
+## END Expires Caching (Leverage Browser Caching) ##
 EOD;
     return $expire_cache_htaccess_content . $rules;
 }
 
 // Set Vary: Accept-Encoding Header
-function wppsb_vary_accept_encoding_filter( $rules ) {
+function wppsb_vary_accept_encoding_filter( $rules = '' ) {
 $vary_accept_encoding_header = <<<EOD
-\n## Added by WP Performance Score Booster ##
-## BEGIN : Vary: Accept-Encoding Header ##
+\n## BEGIN Vary: Accept-Encoding Header ##
 <IfModule mod_headers.c>
 <FilesMatch "\.(js|css|xml|gz)$">
 Header append Vary: Accept-Encoding
 </FilesMatch>
 </IfModule>
-## END : Vary: Accept-Encoding Header ##\n\n
+## END Vary: Accept-Encoding Header ##
 EOD;
     return $vary_accept_encoding_header . $rules;
 }
+
+/* Plan to add in future releases */
+// Defer parsing of java-script (to load at last)
+/* function defer_parsing_of_js ( $src ) {
+	if ( FALSE === strpos( $src, '.js' ) )
+		return $src;
+	if ( strpos( $src, 'jquery.js' ) )
+		return $src;
+	return "$src' defer='defer";
+}
+add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 ); */
+
+// Enqueue scripts in the footer to speed-up page load
+/* function footer_enqueue_scripts() {
+	remove_action('wp_head', 'wp_print_scripts');
+	// remove_action('wp_head', 'wp_print_head_scripts', 9);
+	remove_action('wp_head', 'wp_enqueue_scripts', 1);
+	add_action('wp_footer', 'wp_print_scripts', 5);
+	// add_action('wp_footer', 'wp_print_head_scripts', 5);
+    add_action('wp_footer', 'wp_enqueue_scripts', 5);
+}
+add_action('after_setup_theme', 'footer_enqueue_scripts'); */
 
 // If 'Remove query strings" checkbox ticked, add filter otherwise remove filter
 if (get_option('wppsb_remove_query_strings') == 'on') {
@@ -164,25 +184,8 @@ function wppsb_admin_options() {
         update_option( $enable_gzip, $enable_gzip_val );
         update_option( $expire_caching, $expire_caching_val );
 
-		// If 'Enable GZIP" checkbox ticked, add filter otherwise remove filter
-		if ($enable_gzip_val == 'on') {
-			add_filter('mod_rewrite_rules', 'wppsb_enable_gzip_filter');
-			add_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
-		}
-		else {
-			remove_filter('mod_rewrite_rules', 'wppsb_enable_gzip_filter');
-			remove_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
-		}
-
-		// If 'Expire caching" checkbox ticked, add filter otherwise remove filter
-		if ($expire_caching_val == 'on') {
-			add_filter('mod_rewrite_rules', 'wppsb_expire_caching_filter');
-		}
-		else {
-			remove_filter('mod_rewrite_rules', 'wppsb_expire_caching_filter');
-		}
-
 	    flush_rewrite_rules();
+	    wppsb_save_mod_rewrite_rules();
 
         // Put the settings updated message on the screen
    	?>
@@ -232,6 +235,7 @@ function wppsb_admin_options() {
 add_action( 'admin_menu', 'wppsb_add_admin_menu' );
 function wppsb_add_admin_menu() {
 	add_menu_page( __('WP Performance Score Booster Settings', 'wp-performance-score-booster'), __('WP Performance Score Booster', 'wp-performance-score-booster'), 'manage_options', 'wp-performance-score-booster', 'wppsb_admin_options', plugins_url('assets/images/wppsb-icon-24x24.png', __FILE__) );
+	// add_options_page( __('WP Performance Score Booster Settings', 'wp-performance-score-booster'), __('WP Performance Score Booster', 'wp-performance-score-booster'), 'manage_options', 'wp-performance-score-booster', 'wppsb_admin_options' );
 }
 
 // Add header
@@ -269,6 +273,7 @@ function wppsb_activate_plugin() {
 	add_filter('mod_rewrite_rules', 'wppsb_expire_caching_filter');
 
     flush_rewrite_rules();
+    wppsb_save_mod_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'wppsb_activate_plugin' );
 
@@ -277,6 +282,43 @@ function wppsb_deactivate_plugin() {
 	delete_option( 'wppsb_plugin_version' );
 
     flush_rewrite_rules();
+    wppsb_save_mod_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, 'wppsb_deactivate_plugin' );
+
+// Special thanks to Marin Atanasov ( https://github.com/tyxla ) for contributing this awesome function.
+// Updates the htaccess file with the current rules if it is writable.
+function wppsb_save_mod_rewrite_rules() {
+	if ( is_multisite() )
+		return;
+	global $wp_rewrite;
+	$home_path = get_home_path();
+	$htaccess_file = $home_path.'.htaccess';
+	/*
+	 * If the file doesn't already exist check for write access to the directory
+	 * and whether we have some rules. Else check for write access to the file.
+	 */
+	if ((!file_exists($htaccess_file) && is_writable($home_path) && $wp_rewrite->using_mod_rewrite_permalinks()) || is_writable($htaccess_file)) {
+		if ( got_mod_rewrite() ) {
+			$rules = explode( "\n", $wp_rewrite->mod_rewrite_rules() );
+		    // $remove_query_strings = 'wppsb_remove_query_strings';
+		    $enable_gzip = 'wppsb_enable_gzip';
+		    $expire_caching = 'wppsb_expire_caching';
+		    // $remove_query_strings_val = get_option($remove_query_strings);
+		    $enable_gzip_val = get_option($enable_gzip);
+		    $expire_caching_val = get_option($expire_caching);
+		    $rules = array();
+			if ($enable_gzip_val == 'on') {
+				$rules = array_merge($rules, explode("\n", wppsb_enable_gzip_filter()));
+				$rules = array_merge($rules, explode("\n", wppsb_vary_accept_encoding_filter()));
+			}
+			// If 'Expire caching" checkbox ticked, add filter otherwise remove filter
+			if ($expire_caching_val == 'on') {
+				$rules = array_merge($rules, explode("\n", wppsb_expire_caching_filter()));
+			}
+			return insert_with_markers( $htaccess_file, 'WP Performance Score Booster Settings', $rules );
+		}
+	}
+	return false;
+}
 ?>
