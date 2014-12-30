@@ -19,7 +19,7 @@ This plugin speed-up page load times and improve website scores in services like
 * Add Vary: Accept-Encoding header, and
 * Set expires caching (leverage browser caching).
 
-**It is aways the best policy to open a [support thread] (http://wordpress.org/support/plugin/wp-performance-score-booster) first before posting a negative review.**
+**P.S. It is aways the best policy to open a [support thread](http://wordpress.org/support/plugin/wp-performance-score-booster) first before posting a negative review.**
 
 == Installation ==
 1. Upload the ‘wp-performance-score-booster’ folder to the ‘/wp-content/plugins/‘ directory
