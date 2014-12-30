@@ -4,7 +4,7 @@ Tags: performance, speed, time, query, strings, gzip, compression, caching, boos
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3S8BRPLWLNQ38
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,9 @@ Pretty much, yeah.
 1. Admin Settings
 
 == Changelog ==
+= 1.3.1, Dec 30, 2014 =
+* Fixed issues with htaccess causing internal server error
+
 = 1.3, Dec 29, 2014 =
 * Fixed issues with htaccess custom rules overrides
 * WP Performance Score Booster now adds rules to htaccess outside default WordPress block

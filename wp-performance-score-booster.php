@@ -3,7 +3,7 @@
 Plugin Name: WP Performance Score Booster
 Plugin URI: https://github.com/dipakcg/wp-performance-score-booster
 Description: Speed-up page load times and improve website scores in services like PageSpeed, YSlow, Pingdom and GTmetrix.
-Version: 1.3
+Version: 1.3.1
 Author: Dipak C. Gajjar
 Author URI: http://dipakgajjar.com
 Text Domain: wp-performance-score-booster
@@ -14,7 +14,7 @@ if (!defined('WPPSB_PLUGIN_VERSION')) {
     define('WPPSB_PLUGIN_VERSION', 'wppsb_plugin_version');
 }
 if (!defined('WPPSB_PLUGIN_VERSION_NUM')) {
-    define('WPPSB_PLUGIN_VERSION_NUM', '1.3');
+    define('WPPSB_PLUGIN_VERSION_NUM', '1.3.1');
 }
 update_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
 
@@ -70,7 +70,7 @@ AddOutputFilterByType DEFLATE application/x-httpd-fastphp
 AddOutputFilterByType DEFLATE image/svg+xml
 SetOutputFilter DEFLATE
 </IfModule>
-## END Enable GZIP Compression ##
+## END Enable GZIP Compression ##\n
 EOD;
     return $gzip_htaccess_content . $rules;
 }
@@ -92,7 +92,7 @@ ExpiresByType application/x-shockwave-flash "access 2 week"
 ExpiresByType image/x-icon "access 2 week"
 ExpiresDefault "access 2 week"
 </IfModule>
-## END Expires Caching (Leverage Browser Caching) ##
+## END Expires Caching (Leverage Browser Caching) ##\n
 EOD;
     return $expire_cache_htaccess_content . $rules;
 }
@@ -106,7 +106,7 @@ $vary_accept_encoding_header = <<<EOD
 Header append Vary: Accept-Encoding
 </FilesMatch>
 </IfModule>
-## END Vary: Accept-Encoding Header ##
+## END Vary: Accept-Encoding Header ##\n
 EOD;
     return $vary_accept_encoding_header . $rules;
 }
@@ -262,15 +262,12 @@ function wppsb_activate_plugin() {
 
 	if (function_exists('ob_gzhandler') || ini_get('zlib.output_compression')) {
 		update_option( 'wppsb_enable_gzip', 'on' );
-		add_filter('mod_rewrite_rules', 'wppsb_enable_gzip_filter');
-		add_filter('mod_rewrite_rules', 'wppsb_vary_accept_encoding_filter');
 	}
 	else {
 		update_option( 'wppsb_enable_gzip', '' );
 	}
 
 	update_option( 'wppsb_expire_caching', 'on' );
-	add_filter('mod_rewrite_rules', 'wppsb_expire_caching_filter');
 
     flush_rewrite_rules();
     wppsb_save_mod_rewrite_rules();
