@@ -3,7 +3,7 @@
 Plugin Name: WP Performance Score Booster
 Plugin URI: https://github.com/dipakcg/wp-performance-score-booster
 Description: Speed-up page load times and improve website scores in services like PageSpeed, YSlow, Pingdom and GTmetrix.
-Version: 1.3.1
+Version: 1.4
 Author: Dipak C. Gajjar
 Author URI: http://dipakgajjar.com
 Text Domain: wp-performance-score-booster
@@ -14,7 +14,7 @@ if (!defined('WPPSB_PLUGIN_VERSION')) {
     define('WPPSB_PLUGIN_VERSION', 'wppsb_plugin_version');
 }
 if (!defined('WPPSB_PLUGIN_VERSION_NUM')) {
-    define('WPPSB_PLUGIN_VERSION_NUM', '1.3.1');
+    define('WPPSB_PLUGIN_VERSION_NUM', '1.4');
 }
 update_option(WPPSB_PLUGIN_VERSION, WPPSB_PLUGIN_VERSION_NUM);
 
@@ -229,6 +229,25 @@ function wppsb_admin_options() {
 	</table>
 	</div>
 	<?php
+	echo '<hr style="margin-bottom: 2em;" />';
+    echo '<table cellspacing="0" cellpadding="0" class="news_section"> <tr>';
+    echo '<td width="50%" valign="top">';
+    echo '<h1>News & Updates from Dipak C. Gajjar</h1>';
+    echo '<div class="rss-widget">';
+     wp_widget_rss_output(array(
+          'url' => 'https://dipakgajjar.com/category/news/feed/?refresh='.rand(10,100).'',  // feed URL
+          'title' => 'News & Updates from Dipak C. Gajjar',
+          'items' => 3, // nubmer of posts to display
+          'show_summary' => 1,
+          'show_author' => 0,
+          'show_date' => 0
+     ));
+     echo '</div> <td width="5%"> &nbsp </td>';
+     echo '</td> <td valign="top">';
+     ?>
+     <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/dipakcgajjar" data-widget-id="547661367281729536">Tweets by @dipakcgajjar</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<?php echo '</td> </tr> </table>';
 }
 
 // Register admin menu
